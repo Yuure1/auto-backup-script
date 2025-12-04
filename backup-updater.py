@@ -21,20 +21,14 @@ def listContent(path): # make function to create list of content and push it to 
             
     return list # return array
 
-def areEqual(list1, list2): # check if both arrays have the same content
-    if list1 == list2:
-        return True
-    else:
-        return False
-
 def checkTimeAndSize(file1, file2):
-    f1Time = os.path.getmtime(file1) # get time
+    f1Time = os.path.getmtime(file1) 
     f2Time = os.path.getmtime(file2)
 
-    f1Size = os.path.getsize(file1) # get size
+    f1Size = os.path.getsize(file1) 
     f2Size = os.path.getsize(file2)
 
-    if (f1Time != f2Time) or (f1Size != f2Size):
+    if ((f2Time - f1Time) > 2) or (f1Size != f2Size): 
         return False
     else:
         return True
@@ -53,25 +47,22 @@ def backupFile(src, dst):
         print("Failed to backup!")
         return False
 
-
 if isExists(folderPath):
     if isExists(backupPath):
         while True:
             # check files block
             folderFiles = listContent(folderPath) # list content of two dirs
             backupFiles = listContent(backupPath)
-
             finished = False
             
-            if not finished: # not updating because of this condition
+            if not finished:
                 try:
-
                     # [:] - iterate through a copy of backupFiles
                     for i in backupFiles[:]: # check for files in backup that are missing in folder and remove them
                         if i not in folderFiles:
                             backupFiles.remove(i)
 
-                    if (areEqual(folderFiles, backupFiles)):
+                    if (folderFiles == backupFiles):
                         # compare last modified date and size
 
                         for i in range(len(folderFiles)): # go through each file
@@ -104,8 +95,7 @@ if isExists(folderPath):
                                 backupFile(x, y)
 
                 except Exception:
-                    print(traceback.format_exc()) # print error''' 
-
+                    print(traceback.format_exc()) # print error
             print("Backup folder is up to date.")
             time.sleep(interval)
     else:
